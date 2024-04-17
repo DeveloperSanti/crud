@@ -1,4 +1,4 @@
-package crud.persistence;
+package crud.persistence.entity;
 
 
 import jakarta.persistence.*;
