@@ -20,7 +20,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Optional<ProductEntity> getById(Long idProduct) {
+    public Optional<ProductEntity> getProductById(Long idProduct) {
         return productRepository.findById(idProduct);
     }
 
@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public boolean delete(Long idProduct) {
-        if (getById(idProduct).isPresent()) {
+        if (getProductById(idProduct).isPresent()) {
             productRepository.deleteById(idProduct);
             return true;
         } else {

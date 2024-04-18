@@ -10,7 +10,7 @@ public interface ProductService {
 
     List<ProductEntity> getAll();
 
-    Optional<ProductEntity> getById(Long idProduct);
+    Optional<ProductEntity> getProductById(Long idProduct);
 
     ProductEntity save(ProductEntity product);
 
