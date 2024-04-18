@@ -8,14 +8,12 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    public List<ProductEntity> getAll();
+    List<ProductEntity> getAll();
 
-    public Optional<ProductEntity> getById(Long id);
+    Optional<ProductEntity> getById(Long idProduct);
 
-    public ProductEntity save(ProductEntity product);
+    ProductEntity save(ProductEntity product);
 
-    public
-
-    public boolean delete(Long id);
+    boolean delete(Long idProduct);
 
 }
