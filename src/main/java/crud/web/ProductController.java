@@ -28,8 +28,8 @@ public class ProductController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ProductEntity> save(@RequestBody ProductEntity product){
-        return new ResponseEntity<>(productService.save(product), HttpStatus.CREATED);
+    public ResponseEntity<Object> save(@RequestBody ProductEntity product){
+        return productService.save(product);
     }
 
     @DeleteMapping("/delete/{idProduct}")

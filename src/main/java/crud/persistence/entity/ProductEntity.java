@@ -15,6 +15,7 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idProduct;
 
+    @Column(unique = true, nullable = false)
     private String name;
 
     private double price;

@@ -3,8 +3,12 @@ package crud.service;
 import crud.persistence.entity.ProductEntity;
 import crud.persistence.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +29,25 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductEntity save(ProductEntity product) {
-        return productRepository.save(product);
+    public ResponseEntity<Object> save(ProductEntity product) {
+        Optional<ProductEntity> res = productRepository.findProductByName(product.getName());
+        HashMap<String, Object> info = new HashMap<>();
+
+        if (res.isPresent()) {
+            info.put("Error", true);
+            info.put("message", "There is already a product with that name");
+            return new ResponseEntity<>(
+                    info,
+                    HttpStatus.CONFLICT
+            );
+        }
+        productRepository.save(product);
+        info.put("data", product);
+        info.put("message", "Product saved successfully");
+        return new ResponseEntity<>(
+                info,
+                HttpStatus.CREATED
+        );
     }
 
     @Override
