@@ -4,7 +4,6 @@ import crud.persistence.entity.ProductEntity;
 import crud.persistence.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +32,7 @@ public class ProductServiceImpl implements ProductService{
         Optional<ProductEntity> res = productRepository.findProductByName(product.getName());
         HashMap<String, Object> info = new HashMap<>();
 
-        if (res.isPresent()) {
+        if (res.isPresent() && product.getIdProduct()==null) {
             info.put("Error", true);
             info.put("message", "There is already a product with that name");
             return new ResponseEntity<>(
@@ -41,9 +40,13 @@ public class ProductServiceImpl implements ProductService{
                     HttpStatus.CONFLICT
             );
         }
+        info.put("message", "Product saved successfully");
+        if(productRepository.findById(product.getIdProduct()).isPresent()){
+            info.put("message", "Product update successfully");
+        }
+
         productRepository.save(product);
         info.put("data", product);
-        info.put("message", "Product saved successfully");
         return new ResponseEntity<>(
                 info,
                 HttpStatus.CREATED

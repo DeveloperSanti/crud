@@ -32,6 +32,11 @@ public class ProductController {
         return productService.save(product);
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<Object> updateProduct(@RequestBody ProductEntity product){
+        return productService.save(product);
+    }
+
     @DeleteMapping("/delete/{idProduct}")
     public ResponseEntity delete(@PathVariable("idProduct") Long idProduct){
         if(productService.delete(idProduct)){
