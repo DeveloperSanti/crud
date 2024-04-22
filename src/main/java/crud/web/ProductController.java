@@ -14,36 +14,37 @@ import java.util.List;
 @RequestMapping("api/v1/products")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
 
-    @GetMapping("/getAll")
-    public ResponseEntity<List<ProductEntity>> getAll(){
-        return new ResponseEntity<>(productService.getAll(), HttpStatus.OK);
+    private final ProductService productService;
+
+    @Autowired
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @GetMapping("/findAll")
+    public ResponseEntity<List<ProductEntity>> findAll(){
+        return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{idProduct}")
-    public ResponseEntity<ProductEntity> getProductById(@PathVariable("idProduct") Long idProduct){
-        return productService.getProductById(idProduct).map(product -> new ResponseEntity<>(product, HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<Object> getProductById(@PathVariable("idProduct") Long idProduct){
+        return productService.getProductById(idProduct);
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Object> save(@RequestBody ProductEntity product){
-        return productService.save(product);
+    public ResponseEntity<Object> saveProduct(@RequestBody ProductEntity product){
+        return productService.saveProduct(product);
     }
 
     @PutMapping("/update")
     public ResponseEntity<Object> updateProduct(@RequestBody ProductEntity product){
-        return productService.save(product);
+        return productService.saveProduct(product);
     }
 
     @DeleteMapping("/delete/{idProduct}")
-    public ResponseEntity delete(@PathVariable("idProduct") Long idProduct){
-        if(productService.delete(idProduct)){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Object> deleteProduct(@PathVariable("idProduct") Long idProduct){
+        return productService.deleteProduct(idProduct);
     }
 
 }

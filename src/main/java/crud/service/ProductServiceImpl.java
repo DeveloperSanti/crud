@@ -14,23 +14,44 @@ import java.util.Optional;
 @Service
 public class ProductServiceImpl implements ProductService{
 
+    HashMap<String, Object> info;
+
+
+    private final ProductRepository productRepository;
+
     @Autowired
-    private ProductRepository productRepository;
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Override
-    public List<ProductEntity> getAll() {
+    public List<ProductEntity> findAll() {
         return (List<ProductEntity>) productRepository.findAll();
     }
 
     @Override
-    public Optional<ProductEntity> getProductById(Long idProduct) {
-        return productRepository.findById(idProduct);
+    public ResponseEntity<Object> getProductById(Long idProduct) {
+        info = new HashMap<>();
+        if (!productRepository.existsById(idProduct)) {
+            info.put("Error", true);
+            info.put("message", "Product Not Found");
+            return new ResponseEntity<>(
+                    info,
+                    HttpStatus.CONFLICT
+            );
+        }
+        info.put("message", "Product Found");
+        info.put("Product", productRepository.findById(idProduct));
+        return new ResponseEntity<>(
+                info,
+                HttpStatus.OK
+        );
     }
 
     @Override
-    public ResponseEntity<Object> save(ProductEntity product) {
+    public ResponseEntity<Object> saveProduct(ProductEntity product) {
         Optional<ProductEntity> res = productRepository.findProductByName(product.getName());
-        HashMap<String, Object> info = new HashMap<>();
+        info = new HashMap<>();
 
         if (res.isPresent() && product.getIdProduct()==null) {
             info.put("Error", true);
@@ -54,12 +75,21 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public boolean delete(Long idProduct) {
-        if (getProductById(idProduct).isPresent()) {
-            productRepository.deleteById(idProduct);
-            return true;
-        } else {
-            return false;
+    public ResponseEntity<Object> deleteProduct(Long idProduct) {
+        info = new HashMap<>();
+        if (!productRepository.existsById(idProduct)) {
+            info.put("Error", true);
+            info.put("message", "The product does not exist");
+            return new ResponseEntity<>(
+                    info,
+                    HttpStatus.NOT_FOUND
+            );
         }
+        info.put("message", "Product deleted successfully");
+        productRepository.deleteById(idProduct);
+        return new ResponseEntity<>(
+                info,
+                HttpStatus.NO_CONTENT
+        );
     }
 }
